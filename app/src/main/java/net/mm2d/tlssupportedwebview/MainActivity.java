@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mDelegate = InterceptResponseDelegateFactory.create();
 
         final WebView webView = findViewById(R.id.webView);
         final WebSettings settings = webView.getSettings();
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         settings.setDisplayZoomControls(true);
         settings.setUseWideViewPort(true);
 
-        mDelegate = InterceptResponseDelegateFactory.create(settings.getUserAgentString());
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
             @Override

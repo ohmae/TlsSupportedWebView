@@ -18,13 +18,8 @@ import android.support.annotation.NonNull;
 public class InterceptResponseDelegateFactory {
     @NonNull
     public static InterceptResponseDelegate create() {
-        return create(null);
-    }
-
-    @NonNull
-    public static InterceptResponseDelegate create(final String userAgent) {
         if (Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN && VERSION.SDK_INT < VERSION_CODES.KITKAT) {
-            return InterceptResponseDelegatePreLollipop.newInstance(userAgent);
+            return InterceptResponseDelegatePreLollipop.newInstance();
         }
         return new InterceptResponseDelegateNull();
     }

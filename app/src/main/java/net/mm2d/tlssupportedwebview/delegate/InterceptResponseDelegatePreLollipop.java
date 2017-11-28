@@ -38,14 +38,9 @@ import okhttp3.TlsVersion;
 public class InterceptResponseDelegatePreLollipop implements InterceptResponseDelegate {
     @NonNull
     private final OkHttpClient mOkHttpClient;
-    @Nullable
-    private final String mUserAgent;
 
-    private InterceptResponseDelegatePreLollipop(
-            @NonNull final OkHttpClient client,
-            @Nullable final String userAgent) {
+    private InterceptResponseDelegatePreLollipop(@NonNull final OkHttpClient client) {
         mOkHttpClient = client;
-        mUserAgent = userAgent;
     }
 
     @Override
@@ -54,11 +49,11 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
             @NonNull final WebView view,
             @NonNull final String url) {
         try {
-            final Request.Builder requestBuilder = new Request.Builder();
-            if (mUserAgent != null) {
-                requestBuilder.addHeader("User-Agent", mUserAgent);
-            }
-            final Request request = requestBuilder.url(url).build();
+            final String userAgent = view.getSettings().getUserAgentString();
+            final Request request = new Request.Builder()
+                    .addHeader("User-Agent", userAgent)
+                    .url(url)
+                    .build();
             final Response response = mOkHttpClient.newCall(request).execute();
             final ResponseBody body = response.body();
             if (body == null) {
@@ -77,12 +72,12 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
     }
 
     @NonNull
-    static InterceptResponseDelegate newInstance(@Nullable final String userAgent) {
+    static InterceptResponseDelegate newInstance() {
         final OkHttpClient client = createTslClient();
         if (client == null) {
             return new InterceptResponseDelegateNull();
         }
-        return new InterceptResponseDelegatePreLollipop(client, userAgent);
+        return new InterceptResponseDelegatePreLollipop(client);
     }
 
     @Nullable
