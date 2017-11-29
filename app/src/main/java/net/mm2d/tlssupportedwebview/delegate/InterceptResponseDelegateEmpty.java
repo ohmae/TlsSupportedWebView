@@ -15,7 +15,11 @@ import android.webkit.WebView;
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
  */
-public class InterceptResponseDelegateNull implements InterceptResponseDelegate {
+public class InterceptResponseDelegateEmpty implements InterceptResponseDelegate {
+    @Override
+    public void setUserAgent(@NonNull final String userAgent) {
+    }
+
     @Override
     @Nullable
     public WebResourceResponse shouldInterceptRequest(

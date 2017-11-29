@@ -21,6 +21,6 @@ public class InterceptResponseDelegateFactory {
         if (Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN && VERSION.SDK_INT < VERSION_CODES.KITKAT) {
             return InterceptResponseDelegatePreLollipop.newInstance();
         }
-        return new InterceptResponseDelegateNull();
+        return new InterceptResponseDelegateEmpty();
     }
 }

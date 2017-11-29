@@ -13,6 +13,9 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.ConnectionSpec;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,9 +42,16 @@ import okhttp3.TlsVersion;
 public class InterceptResponseDelegatePreLollipop implements InterceptResponseDelegate {
     @NonNull
     private final OkHttpClient mOkHttpClient;
+    @NonNull
+    private String mUserAgent = "";
 
     private InterceptResponseDelegatePreLollipop(@NonNull final OkHttpClient client) {
         mOkHttpClient = client;
+    }
+
+    @Override
+    public void setUserAgent(@NonNull final String userAgent) {
+        mUserAgent = userAgent;
     }
 
     @Override
@@ -49,9 +60,8 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
             @NonNull final WebView view,
             @NonNull final String url) {
         try {
-            final String userAgent = view.getSettings().getUserAgentString();
             final Request request = new Request.Builder()
-                    .addHeader("User-Agent", userAgent)
+                    .addHeader("User-Agent", mUserAgent)
                     .url(url)
                     .build();
             final Response response = mOkHttpClient.newCall(request).execute();
@@ -75,17 +85,20 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
     static InterceptResponseDelegate newInstance() {
         final OkHttpClient client = createTslClient();
         if (client == null) {
-            return new InterceptResponseDelegateNull();
+            return new InterceptResponseDelegateEmpty();
         }
         return new InterceptResponseDelegatePreLollipop(client);
     }
 
     @Nullable
     private static OkHttpClient createTslClient() {
+        final CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        CookieHandler.setDefault(cookieManager);
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .followRedirects(true)
                 .followSslRedirects(true)
                 .retryOnConnectionFailure(true)
+                .cookieJar(new JavaNetCookieJar(cookieManager))
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS);
@@ -97,7 +110,6 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
             if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
                 return null;
             }
-
             final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(null, null, null);
             builder.sslSocketFactory(new TlsSocketFactory(sslContext.getSocketFactory()), (X509TrustManager) trustManagers[0]);

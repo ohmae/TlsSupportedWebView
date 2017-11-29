@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
         settings.setJavaScriptEnabled(true);
         settings.setSupportZoom(true);
         settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(true);
+        settings.setDisplayZoomControls(false);
         settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
 
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 return mDelegate.shouldInterceptRequest(view, url);
             }
         });
+        mDelegate.setUserAgent(settings.getUserAgentString());
         webView.loadUrl("https://www.ssllabs.com/ssltest/viewMyClient.html");
     }
 }
