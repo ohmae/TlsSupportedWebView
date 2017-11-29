@@ -26,14 +26,12 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import net.mm2d.tlssupportedwebview.delegate.InterceptResponseDelegate;
-import net.mm2d.tlssupportedwebview.delegate.InterceptResponseDelegateFactory;
+import net.mm2d.tlssupportedwebview.delegate.InterceptResponseDelegates;
 
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
  */
 public class MainActivity extends AppCompatActivity {
-    private InterceptResponseDelegate mDelegate;
     private ActionBar mActionBar;
     private WebView mWebView;
     private ProgressBar mProgressBar;
@@ -59,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         settings.setDisplayZoomControls(false);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-
-        mDelegate = InterceptResponseDelegateFactory.create();
-        mDelegate.setUserAgent(settings.getUserAgentString());
 
         mProgressBar = findViewById(R.id.progressBar);
 
@@ -104,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
-                return mDelegate.shouldInterceptRequest(view, url);
+                return InterceptResponseDelegates.get().shouldInterceptRequest(view, url);
             }
 
             @Override
             public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
+                InterceptResponseDelegates.get().setUserAgent(view.getSettings().getUserAgentString());
                 mActionBar.setTitle("");
                 mActionBar.setSubtitle(url);
             }

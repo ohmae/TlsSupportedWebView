@@ -8,6 +8,21 @@
 
 This is a test implementation that enables TSL 1.2 in WebView of Android 4.1 - 4.3.
 
+The trick is as follows.
+```java
+mWebView.setWebViewClient(new WebViewClient() {
+    @Override
+    public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
+        return InterceptResponseDelegates.get().shouldInterceptRequest(view, url);
+    }
+
+    @Override
+    public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
+        InterceptResponseDelegates.get().setUserAgent(view.getSettings().getUserAgentString());
+    }
+});
+```
+
 ## Screenshots
 
 |before|after|

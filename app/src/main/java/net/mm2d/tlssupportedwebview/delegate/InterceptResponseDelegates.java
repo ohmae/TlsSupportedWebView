@@ -15,9 +15,16 @@ import android.support.annotation.NonNull;
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
  */
-public class InterceptResponseDelegateFactory {
+public class InterceptResponseDelegates {
+    private static final InterceptResponseDelegate INSTANCE = create();
+
     @NonNull
-    public static InterceptResponseDelegate create() {
+    public static InterceptResponseDelegate get() {
+        return INSTANCE;
+    }
+
+    @NonNull
+    private static InterceptResponseDelegate create() {
         if (Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN && VERSION.SDK_INT < VERSION_CODES.KITKAT) {
             return InterceptResponseDelegatePreLollipop.newInstance();
         }
