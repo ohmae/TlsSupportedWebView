@@ -9,6 +9,7 @@ package net.mm2d.tlssupportedwebview.delegate;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.webkit.URLUtil;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
@@ -59,6 +60,9 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
     public WebResourceResponse shouldInterceptRequest(
             @NonNull final WebView view,
             @NonNull final String url) {
+        if (!URLUtil.isNetworkUrl(url)) {
+            return null;
+        }
         try {
             final Request request = new Request.Builder()
                     .addHeader("User-Agent", mUserAgent)
