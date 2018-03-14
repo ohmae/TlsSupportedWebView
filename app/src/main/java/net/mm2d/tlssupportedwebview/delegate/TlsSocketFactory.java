@@ -21,7 +21,7 @@ class TlsSocketFactory extends SSLSocketFactory {
     private static final String[] TLS = {"TLSv1.1", "TLSv1.2"};
     private final SSLSocketFactory mDelegate;
 
-    public TlsSocketFactory(final SSLSocketFactory factory) {
+    TlsSocketFactory(final SSLSocketFactory factory) {
         mDelegate = factory;
     }
 
