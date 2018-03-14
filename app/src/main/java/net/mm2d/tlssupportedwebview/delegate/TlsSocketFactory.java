@@ -17,7 +17,7 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
  */
-public class TlsSocketFactory extends SSLSocketFactory {
+class TlsSocketFactory extends SSLSocketFactory {
     private static final String[] TLS = {"TLSv1.1", "TLSv1.2"};
     private final SSLSocketFactory mDelegate;
 

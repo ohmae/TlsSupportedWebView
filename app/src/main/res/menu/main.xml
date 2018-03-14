@@ -7,14 +7,16 @@
 
     <item
         android:id="@+id/action_back"
-        android:orderInCategory="100"
         android:icon="@drawable/ic_back"
-        app:showAsAction="always"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/action_forward"
-        android:orderInCategory="100"
         android:icon="@drawable/ic_forward"
-        app:showAsAction="always"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="ifRoom"
         />
 </menu>

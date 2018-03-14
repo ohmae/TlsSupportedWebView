@@ -87,7 +87,7 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
 
     @NonNull
     static InterceptResponseDelegate newInstance() {
-        final OkHttpClient client = createTslClient();
+        final OkHttpClient client = createTlsClient();
         if (client == null) {
             return new InterceptResponseDelegateEmpty();
         }
@@ -95,7 +95,7 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
     }
 
     @Nullable
-    private static OkHttpClient createTslClient() {
+    private static OkHttpClient createTlsClient() {
         final CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -119,7 +119,7 @@ public class InterceptResponseDelegatePreLollipop implements InterceptResponseDe
             builder.sslSocketFactory(new TlsSocketFactory(sslContext.getSocketFactory()), (X509TrustManager) trustManagers[0]);
 
             final ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1)
                     .build();
             final List<ConnectionSpec> specs = new ArrayList<>();
             specs.add(connectionSpec);

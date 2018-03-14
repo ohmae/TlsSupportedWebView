@@ -83,12 +83,16 @@ public class MainActivity extends AppCompatActivity {
     private void setWebChromeClient() {
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onReceivedTitle(final WebView view, final String title) {
+            public void onReceivedTitle(
+                    final WebView view,
+                    final String title) {
                 mActionBar.setTitle(title);
             }
 
             @Override
-            public void onProgressChanged(final WebView view, final int newProgress) {
+            public void onProgressChanged(
+                    final WebView view,
+                    final int newProgress) {
                 mProgressBar.setVisibility(newProgress == 100 ? View.GONE : View.VISIBLE);
                 mProgressBar.setProgress(newProgress);
             }
@@ -98,19 +102,27 @@ public class MainActivity extends AppCompatActivity {
     private void setWebViewClient() {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
-            public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
+            public WebResourceResponse shouldInterceptRequest(
+                    final WebView view,
+                    final String url) {
                 return InterceptResponseDelegates.get().shouldInterceptRequest(view, url);
             }
 
             @Override
-            public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
+            public void onPageStarted(
+                    final WebView view,
+                    final String url,
+                    final Bitmap favicon) {
                 InterceptResponseDelegates.get().setUserAgent(view.getSettings().getUserAgentString());
                 mActionBar.setTitle("");
                 mActionBar.setSubtitle(url);
             }
 
             @Override
-            public void doUpdateVisitedHistory(final WebView view, final String url, final boolean isReload) {
+            public void doUpdateVisitedHistory(
+                    final WebView view,
+                    final String url,
+                    final boolean isReload) {
                 invalidateOptionsMenu();
             }
         });
@@ -135,10 +147,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        mBackMenu.setEnabled(mWebView.canGoBack());
-        mBackMenu.getIcon().setAlpha(mWebView.canGoBack() ? 0xff : 0x40);
-        mForwardMenu.setEnabled(mWebView.canGoForward());
-        mForwardMenu.getIcon().setAlpha(mWebView.canGoForward() ? 0xff : 0x40);
+        final boolean canGoBack = mWebView.canGoBack();
+        mBackMenu.setEnabled(canGoBack);
+        mBackMenu.getIcon().setAlpha(canGoBack ? 0xff : 0x40);
+        final boolean canGoForward = mWebView.canGoForward();
+        mForwardMenu.setEnabled(canGoForward);
+        mForwardMenu.getIcon().setAlpha(canGoForward ? 0xff : 0x40);
         return super.onPrepareOptionsMenu(menu);
     }
 
